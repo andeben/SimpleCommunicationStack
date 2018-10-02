@@ -26,7 +26,11 @@ Server::ConnectionHandler::ConnectionHandler()
 
 Server::ConnectionHandler::~ConnectionHandler()
 {
-
+  for (auto it = mConnection.begin(); it != mConnection.end(); it++)
+  {
+    close(it->connectionSocket);
+    mConnection.erase(it);
+  }
 }
 
 void Server::ConnectionHandler::RunConnectionHandler()
@@ -53,13 +57,12 @@ void Server::ConnectionHandler::Send(int connectionId)
   mTicks = time(NULL);
   snprintf(mSendBuff, sizeof(mSendBuff), "%.24s\r\n", ctime(&mTicks));
 
-  for (auto it = mConnection.begin(); it != mConnection.end(); it++) {
+  for (auto it = mConnection.begin(); it != mConnection.end(); it++)
+  {
     if (it->connectionId == connectionId)
     {
       write(it->connectionSocket, mSendBuff, strlen(mSendBuff));
-      close(it->connectionSocket);
     }
-
   }
 }
 

@@ -13,7 +13,7 @@ typedef struct Connection
 {
   int connectionSocket;
   int connectionId;
-};
+} Connection_t;
 
 class ConnectionHandler {
 public:
@@ -29,7 +29,7 @@ private:
   int mConnectionId = 0;
   struct sockaddr_in mServAddr;
   char mSendBuff[1024];
-  time_t mTicks;
+  time_t mTicks = 0;;
 };
 
 }
@@ -48,7 +48,7 @@ private:
   int mConnfd = 0;
   int mSocketfd = 0;
   struct sockaddr_in mClientAddr;
-  time_t mTicks;
+  time_t mTicks = 0;
 
 };
 

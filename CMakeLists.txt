@@ -5,5 +5,5 @@ cmake_minimum_required (VERSION 2.8.11)
 project (TestSocket)
 
 
-add_subdirectory (Client/src)
-add_subdirectory (Server/src)
+add_subdirectory (TestClient/src)
+add_subdirectory (TestServer/src)

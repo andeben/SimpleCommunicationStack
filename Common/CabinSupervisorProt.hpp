@@ -1,12 +1,14 @@
 #ifndef CABIN_SUPERVISOR_PROT_HPP
 #define CABIN_SUPERVISOR_PROT_HPP
 
+#include <stdint.h>
+
 ///////////////////////////////////////////////////////////////////////////////
 ///////////						Main Protocol Carrier 			    ///////////
 ///////////////////////////////////////////////////////////////////////////////
 typedef struct {
-  int      signo;
-  uint8_t* payload;
+  uint8_t signo;
+  uint8_t payload[100];
 } CabinSupervisorProt;
 
 
@@ -35,15 +37,15 @@ typedef struct {
 ///////////						SIGNAL Payload structures	    ///////////
 ///////////////////////////////////////////////////////////////////////////////
 typedef struct {
-  int   supportedFunctions;
+  uint8_t   supportedFunctions;
 } CspEstablishConnectionReq;
 
 typedef struct {
-  int   connectionId;
+  uint8_t   connectionId;
 } CspEstablishConnectionCfm;
 
 typedef struct {
-  int   errorCode;
+  uint8_t   errorCode;
 } CspEstablishConnectionRej;
 
 
@@ -51,39 +53,39 @@ typedef struct {
 } CspClimateRegisterTempSensorReq;
 
 typedef struct {
-  int   tempSensorId;
+  uint8_t   tempSensorId;
 } CspClimateRegisterTempSensorCfm;
 
 typedef struct {
-  int   errorCode;
+  uint8_t   errorCode;
 } CspClimateRegisterTempSensorRej;
 
 typedef struct {
-  int   temperature;
+  uint8_t   temperature;
 } CspClimateRegisterTemperatureFwd;
 
 typedef struct {
 } CspWaterRegisterWaterPumpReq;
 
 typedef struct {
-  int   waterPumpId;
+  uint8_t   waterPumpId;
 } CspWaterRegisterWaterPumpCfm;
 
 typedef struct {
-  int   errorCode;
+  uint8_t   errorCode;
 } CspWaterRegisterWaterPumpRej;
 
 typedef struct {
-  int   waterPumpId;
-  int   cmdId;
+  uint8_t   waterPumpId;
+  uint8_t   cmdId;
 } CspWaterRegisterWaterPumpControlInd;
 
 typedef struct {
-  int   waterPumpId;
-  int   cmdId;
+  uint8_t   waterPumpId;
+  uint8_t   cmdId;
 } CspWaterRegisterWaterPumpControlRsp;
 
 
 
 
-#endif CABIN_SUPERVISO_PROT_HPP
+#endif CABIN_SUPERVISOR_PROT_HPP
