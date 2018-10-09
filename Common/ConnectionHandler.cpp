@@ -46,7 +46,10 @@ void Server::ConnectionHandler::RunConnectionHandler()
     Connection *newConnection = new Connection();
     newConnection->connectionId = mConnectionId++;
     newConnection->connectionSocket = result;
+    int flags = fcntl(result, F_GETFL);
+    fcntl(result, F_SETFL, flags | O_NONBLOCK);
     mConnection.push_back(*newConnection);
+
     printf("\n Found new Connection : Assign ConnectionId: %d \n", mConnectionId - 1 );
   }
   sleep(1);
@@ -61,13 +64,12 @@ void Server::ConnectionHandler::RunReceiveHandler()
     receiveSize = read(it->connectionSocket, receiveBuffer, RECEIVE_BUFFER_SIZE-1);
     if (receiveSize > 0)
     {
-      break;
-      printf("\n Received Message(%d) from Connection %d: ", receiveSize, it->connectionId);
-      for (int i = 0; i < receiveSize; i++)
-      {
-        printf("%02X", receiveBuffer[i]);
-      }
-      printf("\n");
+//      printf("\n Received Message(%d) from Connection %d: ", receiveSize, it->connectionId);
+//      for (int i = 0; i < receiveSize; i++)
+//      {
+//        printf("%02X", receiveBuffer[i]);
+//      }
+//      printf("\n");
 
       //Callback on receive
       if (mReceiveCallback != NULL)
@@ -133,4 +135,10 @@ int Client::ConnectionHandler::Receive(char* aReceiveBuffer, int aReceiveBufferS
     returnValue = receiveSize;
   }
   return returnValue;
+}
+
+
+void Client::ConnectionHandler::Send(char * aSendBuffer, int aDataSize)
+{
+  write(mSocketfd, aSendBuffer, aDataSize);
 }

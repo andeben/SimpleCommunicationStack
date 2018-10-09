@@ -47,7 +47,7 @@ public:
   ~ConnectionHandler();
 
   int Receive(char* aReceiveBuffer, int aReceiveBufferSize);
-
+  void Send(char * aSendBuffer, int aDataSize);
 private:
   int mListenfd = 0;
   int mConnfd = 0;

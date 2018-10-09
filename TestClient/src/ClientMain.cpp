@@ -32,6 +32,8 @@ void receive(){
 
 void send()
 {
+  char sendBuffer[40] = "Hello WOrld";
+  mConnectionHandler->Send(sendBuffer, 40);
 
 }
 
@@ -87,6 +89,7 @@ int main(int argc, char *argv[])
     {
       //Send Request
       cout << "Send Request" << endl;
+      send();
     }
     else if (myNumber == 9)
     {
