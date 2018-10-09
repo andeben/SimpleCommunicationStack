@@ -21,9 +21,9 @@ void MessageRouter::Run()
   mConnection->RunReceiveHandler();
 }
 
-void MessageRouter::AddSignalSubscriber(int aSignalNumber, std::function<void()> aCallback)
+void MessageRouter::AddSignalSubscriber(int aSignalNumber, std::function<void(CabinSupervisorProt)> aCallback)
 {
-
+  mSubscribers.insert({aSignalNumber, aCallback});
 }
 
 void MessageRouter::OnReceive(int aConnectionId, char* aReceiveBuffer, int aReceiveBufferSize)
