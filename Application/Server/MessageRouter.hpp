@@ -2,6 +2,8 @@
 #define MESSAGE_ROUTER_HPP
 
 #include <string>
+#include <functional>
+
 #include "ConnectionHandler.hpp"
 
 
@@ -14,8 +16,10 @@ public:
   MessageRouter();
   ~MessageRouter();
   void Run();
+  void AddSignalSubscriber(int aSignalNumber, std::function<void()> aCallback);
 private:
+  void OnReceive(int aConnectionId, char* aReceiveBuffer, int aReceiveBufferSize);
   Server::ConnectionHandler* mConnection;
 };
 
-#endif MESSAGE_ROUTER_HPP
+#endif //MESSAGE_ROUTER_HPP

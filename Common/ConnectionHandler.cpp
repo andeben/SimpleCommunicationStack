@@ -33,6 +33,11 @@ Server::ConnectionHandler::~ConnectionHandler()
   }
 }
 
+void Server::ConnectionHandler::RegisterOnReceiveCallback(std::function<void(int, char*, int)> aReceiveCallback)
+{
+  mReceiveCallback = aReceiveCallback;
+}
+
 void Server::ConnectionHandler::RunConnectionHandler()
 {
   int result = accept(mListenSocket, (struct sockaddr*)NULL, NULL);
@@ -47,9 +52,30 @@ void Server::ConnectionHandler::RunConnectionHandler()
   sleep(1);
 }
 
-void Server::ConnectionHandler::Receive()
+void Server::ConnectionHandler::RunReceiveHandler()
 {
+  int receiveSize = 0;
+  char receiveBuffer[RECEIVE_BUFFER_SIZE];
+  for (auto it = mConnection.begin(); it != mConnection.end(); it++)
+  {
+    receiveSize = read(it->connectionSocket, receiveBuffer, RECEIVE_BUFFER_SIZE-1);
+    if (receiveSize > 0)
+    {
+      break;
+      printf("\n Received Message(%d) from Connection %d: ", receiveSize, it->connectionId);
+      for (int i = 0; i < receiveSize; i++)
+      {
+        printf("%02X", receiveBuffer[i]);
+      }
+      printf("\n");
 
+      //Callback on receive
+      if (mReceiveCallback != NULL)
+      {
+        mReceiveCallback(it->connectionId, receiveBuffer, receiveSize);
+      }
+    }
+  }
 }
 
 void Server::ConnectionHandler::Send(int connectionId)

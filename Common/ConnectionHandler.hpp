@@ -5,6 +5,9 @@
 #include <list>
 #include <time.h>
 #include <netinet/in.h>
+#include <functional>
+
+const int RECEIVE_BUFFER_SIZE = 512;
 
 
 namespace Server {
@@ -20,8 +23,9 @@ public:
   ConnectionHandler();
   ~ConnectionHandler();
 
+  void RegisterOnReceiveCallback(std::function<void(int, char*, int)> aReceiveCallback);
   void RunConnectionHandler();
-  void Receive();
+  void RunReceiveHandler();
   void Send(int connectionId);
 private:
   int mListenSocket = 0;
@@ -29,7 +33,8 @@ private:
   int mConnectionId = 0;
   struct sockaddr_in mServAddr;
   char mSendBuff[1024];
-  time_t mTicks = 0;;
+  time_t mTicks = 0;
+  std::function<void(int, char*, int)> mReceiveCallback;
 };
 
 }

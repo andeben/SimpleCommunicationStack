@@ -1,17 +1,16 @@
 
-#include "ConnectionHandler.hpp"
+#include "MessageRouter.hpp"
 #include <unistd.h>
 
 
 int main(int argc, char *argv[])
 {
-  Server::ConnectionHandler* mConnectionHandler = new Server::ConnectionHandler();
+  MessageRouter* mMessageRouter = new MessageRouter();
   while(1)
   {
-    mConnectionHandler->RunConnectionHandler();
-    mConnectionHandler->Send(0);
+    mMessageRouter->Run();
     usleep(500);
   }
-  delete mConnectionHandler;
+  delete mMessageRouter;
 }
 
