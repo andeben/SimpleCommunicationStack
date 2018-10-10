@@ -1,6 +1,7 @@
 #ifndef CSP_HANDLER_HPP
 #define CSP_HANDLER_HPP
 
+#include "BlackChannel.hpp"
 #include "CabinSupervisorProt.hpp"
 
 class CspHandler {
@@ -8,7 +9,7 @@ public:
   CspHandler();
   ~CspHandler();
 
-  void HandleReceivedMessage(CabinSupervisorProt aMessage);
+  void HandleReceivedMessage(BlackChannelMessagePayload_t* aMessage);
 
 private:
   void OnEstablishConnectionReq();         //0x01

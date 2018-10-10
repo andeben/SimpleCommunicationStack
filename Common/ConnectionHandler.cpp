@@ -16,7 +16,7 @@ Server::ConnectionHandler::ConnectionHandler()
 
   mServAddr.sin_family = AF_INET;
   mServAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-  mServAddr.sin_port = htons(5000);
+  mServAddr.sin_port = htons(5001);
 
   int flags = fcntl(mListenSocket, F_GETFL);
   fcntl(mListenSocket, F_SETFL, flags | O_NONBLOCK);
@@ -52,7 +52,7 @@ void Server::ConnectionHandler::RunConnectionHandler()
 
     printf("\n Found new Connection : Assign ConnectionId: %d \n", mConnectionId - 1 );
   }
-  sleep(1);
+  usleep(50);
 }
 
 void Server::ConnectionHandler::RunReceiveHandler()
@@ -105,7 +105,7 @@ Client::ConnectionHandler::ConnectionHandler(char * ip)
   }
   memset(&mClientAddr, '0', sizeof(mClientAddr));
   mClientAddr.sin_family = AF_INET;
-  mClientAddr.sin_port = htons(5000);
+  mClientAddr.sin_port = htons(5001);
 
   if(inet_pton(AF_INET, ip, &mClientAddr.sin_addr)<=0)
   {

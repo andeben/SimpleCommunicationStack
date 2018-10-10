@@ -1,5 +1,8 @@
 #include "MessageRouter.hpp"
 #include <functional>
+#include <stdio.h>
+#include <string.h>
+#include "BlackChannel.hpp"
 #include "ConnectionHandler.hpp"
 
 
@@ -21,18 +24,24 @@ void MessageRouter::Run()
   mConnection->RunReceiveHandler();
 }
 
-void MessageRouter::AddSignalSubscriber(int aSignalNumber, std::function<void(CabinSupervisorProt)> aCallback)
+void MessageRouter::AddSignalSubscriber(uint8_t aProtocolId, std::function<void(BlackChannelMessagePayload_t*)> aCallback)
 {
-  mSubscribers.insert({aSignalNumber, aCallback});
+  mSubscribers.insert({aProtocolId, aCallback});
 }
 
 void MessageRouter::OnReceive(int aConnectionId, char* aReceiveBuffer, int aReceiveBufferSize)
 {
-  printf("\n ------------------MessageRouter::OnReceive---------------------: ");
-  printf("\n Received Message(%d) from Connection %d: ", aReceiveBufferSize, aConnectionId);
-  for (int i = 0; i < aReceiveBufferSize; i++)
+//  printf("\n ------------------MessageRouter::OnReceive---------------------: ");
+//  printf("\n Received Message(%d) from Connection %d: ", aReceiveBufferSize, aConnectionId);
+//  for (int i = 0; i < aReceiveBufferSize; i++)
+//  {
+//    printf("%02X", aReceiveBuffer[i]);
+//  }
+//  printf("\n");
+  //Callback
+  auto it = mSubscribers.find(((BlackChannelMessagePayload_t*)((BlackChannelMessage_t*)aReceiveBuffer)->payload)->protocolId);
+  if (it != mSubscribers.end())
   {
-    printf("%02X", aReceiveBuffer[i]);
+    it->second(((BlackChannelMessagePayload_t*)((BlackChannelMessage_t*)aReceiveBuffer)->payload));
   }
-  printf("\n");
 }

@@ -5,6 +5,7 @@
 #include <functional>
 #include <map>
 
+#include "BlackChannel.hpp"
 #include "ConnectionHandler.hpp"
 #include "CabinSupervisorProt.hpp"
 
@@ -16,11 +17,11 @@ public:
   MessageRouter();
   ~MessageRouter();
   void Run();
-  void AddSignalSubscriber(int aSignalNumber, std::function<void(CabinSupervisorProt)>  aCallback);
+  void AddSignalSubscriber(uint8_t aProtocolId, std::function<void(BlackChannelMessagePayload_t*)>  aCallback);
 private:
   void OnReceive(int aConnectionId, char* aReceiveBuffer, int aReceiveBufferSize);
   Server::ConnectionHandler* mConnection;
-  std::map<int,std::function<void(CabinSupervisorProt)> > mSubscribers;
+  std::map<int,std::function<void(BlackChannelMessagePayload_t*)> > mSubscribers;
 
 };
 

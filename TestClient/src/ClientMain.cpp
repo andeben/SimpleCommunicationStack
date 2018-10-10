@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sstream>
 
+#include "BlackChannel.hpp"
 #include "ConnectionHandler.hpp"
 
 
@@ -32,8 +33,14 @@ void receive(){
 
 void send()
 {
-  char sendBuffer[40] = "Hello WOrld";
-  mConnectionHandler->Send(sendBuffer, 40);
+  BlackChannelMessagePayload_t payload;
+  memcpy(payload.payload, "Hello World", sizeof("Hello World"));
+  payload.protocolId = BLACK_CHANNEL_PROTOCOL_ID_CSP;
+
+  BlackChannelMessage_t message;
+  message.signo = 0x01;
+  memcpy(&message.payload, &payload, sizeof(BlackChannelMessagePayload_t));
+  mConnectionHandler->Send((char*)&message, sizeof(message));
 
 }
 

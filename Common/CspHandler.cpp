@@ -1,5 +1,5 @@
 #include "CspHandler.hpp"
-
+#include <stdio.h>
 
 CspHandler::CspHandler()
 {
@@ -9,9 +9,15 @@ CspHandler::~CspHandler()
 {
 }
 
-void CspHandler::HandleReceivedMessage(CabinSupervisorProt aMessage)
+void CspHandler::HandleReceivedMessage(BlackChannelMessagePayload_t* aMessage)
 {
-
+  printf("\n ------------------CspHandler::HandleReceivedMessage---------------------: ");
+  printf("\n received message with protocol id: %d \n", aMessage->protocolId);
+  for (int i = 0; i < sizeof(aMessage->payload); i++)
+  {
+    printf("%02x", aMessage->payload[i]);
+  }
+  printf("\n");
 }
 
 

@@ -3,7 +3,9 @@
 #include <unistd.h>
 #include <functional>
 
+#include "BlackChannel.hpp"
 #include "CspHandler.hpp"
+
 
 int main(int argc, char *argv[])
 {
@@ -13,7 +15,7 @@ int main(int argc, char *argv[])
   {
     mMessageRouter->Run();
     using namespace std::placeholders;
-    mMessageRouter->AddSignalSubscriber(CSP_ESTABLISH_CONNECTION_REQ, std::bind(&CspHandler::HandleReceivedMessage, mCspHandler, _1));
+    mMessageRouter->AddSignalSubscriber(BLACK_CHANNEL_PROTOCOL_ID_CSP, std::bind(&CspHandler::HandleReceivedMessage, mCspHandler, _1));
     usleep(500);
   }
   delete mMessageRouter;

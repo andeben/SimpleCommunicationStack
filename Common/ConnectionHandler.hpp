@@ -9,7 +9,6 @@
 
 const int RECEIVE_BUFFER_SIZE = 512;
 
-
 namespace Server {
 
 typedef struct Connection
