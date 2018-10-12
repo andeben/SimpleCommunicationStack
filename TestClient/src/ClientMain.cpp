@@ -6,6 +6,7 @@
 
 #include "BlackChannel.hpp"
 #include "ConnectionHandler.hpp"
+#include "CabinSupervisorProt.hpp"
 
 
 using namespace std;
@@ -31,10 +32,14 @@ void receive(){
   }
 }
 
-void send()
+void send(uint8_t sigNo)
 {
   BlackChannelMessagePayload_t payload;
-  memcpy(payload.payload, "Hello World", sizeof("Hello World"));
+  CabinSupervisorProt_t cabinPayload;
+  memset(&payload, 0, sizeof(BlackChannelMessagePayload_t));
+  memset(&cabinPayload, 0, sizeof(CabinSupervisorProt_t));
+  cabinPayload.signo = sigNo;
+  memcpy(payload.payload, &cabinPayload, sizeof(CabinSupervisorProt_t));
   payload.protocolId = BLACK_CHANNEL_PROTOCOL_ID_CSP;
 
   BlackChannelMessage_t message;
@@ -96,7 +101,19 @@ int main(int argc, char *argv[])
     {
       //Send Request
       cout << "Send Request" << endl;
-      send();
+      send(0x01);
+      send(0x02);
+      send(0x03);
+      send(0x11);
+      send(0x12);
+      send(0x13);
+      send(0x14);
+      send(0x21);
+      send(0x22);
+      send(0x23);
+      send(0x24);
+      send(0x25);
+
     }
     else if (myNumber == 9)
     {

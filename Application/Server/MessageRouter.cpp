@@ -31,13 +31,7 @@ void MessageRouter::AddSignalSubscriber(uint8_t aProtocolId, std::function<void(
 
 void MessageRouter::OnReceive(int aConnectionId, char* aReceiveBuffer, int aReceiveBufferSize)
 {
-//  printf("\n ------------------MessageRouter::OnReceive---------------------: ");
-//  printf("\n Received Message(%d) from Connection %d: ", aReceiveBufferSize, aConnectionId);
-//  for (int i = 0; i < aReceiveBufferSize; i++)
-//  {
-//    printf("%02X", aReceiveBuffer[i]);
-//  }
-//  printf("\n");
+  printf("\n *******************************OnReceive \n");
   //Callback
   auto it = mSubscribers.find(((BlackChannelMessagePayload_t*)((BlackChannelMessage_t*)aReceiveBuffer)->payload)->protocolId);
   if (it != mSubscribers.end())

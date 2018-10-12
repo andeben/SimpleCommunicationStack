@@ -21,7 +21,7 @@ public:
 private:
   void OnReceive(int aConnectionId, char* aReceiveBuffer, int aReceiveBufferSize);
   Server::ConnectionHandler* mConnection;
-  std::map<int,std::function<void(BlackChannelMessagePayload_t*)> > mSubscribers;
+  std::map<uint8_t,std::function<void(BlackChannelMessagePayload_t*)> > mSubscribers;
 
 };
 

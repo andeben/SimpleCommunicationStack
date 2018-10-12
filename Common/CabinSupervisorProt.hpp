@@ -9,7 +9,7 @@
 typedef struct {
   uint8_t signo;
   uint8_t payload[100];
-} CabinSupervisorProt;
+} CabinSupervisorProt_t;
 
 
 

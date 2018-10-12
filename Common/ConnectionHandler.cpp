@@ -16,7 +16,7 @@ Server::ConnectionHandler::ConnectionHandler()
 
   mServAddr.sin_family = AF_INET;
   mServAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-  mServAddr.sin_port = htons(5001);
+  mServAddr.sin_port = htons(5000);
 
   int flags = fcntl(mListenSocket, F_GETFL);
   fcntl(mListenSocket, F_SETFL, flags | O_NONBLOCK);
@@ -52,7 +52,6 @@ void Server::ConnectionHandler::RunConnectionHandler()
 
     printf("\n Found new Connection : Assign ConnectionId: %d \n", mConnectionId - 1 );
   }
-  usleep(50);
 }
 
 void Server::ConnectionHandler::RunReceiveHandler()
@@ -64,12 +63,7 @@ void Server::ConnectionHandler::RunReceiveHandler()
     receiveSize = read(it->connectionSocket, receiveBuffer, RECEIVE_BUFFER_SIZE-1);
     if (receiveSize > 0)
     {
-//      printf("\n Received Message(%d) from Connection %d: ", receiveSize, it->connectionId);
-//      for (int i = 0; i < receiveSize; i++)
-//      {
-//        printf("%02X", receiveBuffer[i]);
-//      }
-//      printf("\n");
+      printf("\n Receive something \n");
 
       //Callback on receive
       if (mReceiveCallback != NULL)
@@ -92,6 +86,7 @@ void Server::ConnectionHandler::Send(int connectionId)
       write(it->connectionSocket, mSendBuff, strlen(mSendBuff));
     }
   }
+  usleep(2);
 }
 
 
@@ -105,7 +100,7 @@ Client::ConnectionHandler::ConnectionHandler(char * ip)
   }
   memset(&mClientAddr, '0', sizeof(mClientAddr));
   mClientAddr.sin_family = AF_INET;
-  mClientAddr.sin_port = htons(5001);
+  mClientAddr.sin_port = htons(5000);
 
   if(inet_pton(AF_INET, ip, &mClientAddr.sin_addr)<=0)
   {
@@ -141,4 +136,6 @@ int Client::ConnectionHandler::Receive(char* aReceiveBuffer, int aReceiveBufferS
 void Client::ConnectionHandler::Send(char * aSendBuffer, int aDataSize)
 {
   write(mSocketfd, aSendBuffer, aDataSize);
+  usleep(60);
+  printf("\n Send \n");
 }
