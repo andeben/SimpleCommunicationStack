@@ -1,9 +1,20 @@
 # CMakeLists files in this project can
 # refer to the root source directory of the project as ${HELLO_SOURCE_DIR} and
 # to the root binary directory of the project as ${HELLO_BINARY_DIR}.
-cmake_minimum_required (VERSION 2.8.11)
-project (TestSocket)
+cmake_minimum_required (VERSION 3.6)
 
 
-add_subdirectory (TestClient/src)
-add_subdirectory (TestServer/src)
+aux_source_directory(${CMAKE_SOURCE_DIR}/Common Common)
+aux_source_directory(${CMAKE_SOURCE_DIR}/Application/LinuxClient ApplicationLinuxClient)
+aux_source_directory(${CMAKE_SOURCE_DIR}/Application/LinuxServer ApplicationLinuxServer)
+
+aux_source_directory(${CMAKE_SOURCE_DIR}/Platform/LinuxClient PlatformLinuxClient)
+aux_source_directory(${CMAKE_SOURCE_DIR}/Platform/LinuxServer PlatformLinuxServer)
+
+add_library(CommonLib OBJECT ${Common})
+
+
+set_property(TARGET CommonLib PROPERTY CXX_STANDARD 11)
+
+add_subdirectory (BuildProperties/Linux)
+add_subdirectory (BuildProperties/Esp8266)
