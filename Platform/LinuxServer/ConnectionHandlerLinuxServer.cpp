@@ -8,15 +8,14 @@
 #include <arpa/inet.h>
 
 
-Server::ConnectionHandler::ConnectionHandler()
+ConnectionHandler::ConnectionHandler()
 {
   mListenSocket = socket(AF_INET, SOCK_STREAM, 0);
   memset(&mServAddr, '0', sizeof(mServAddr));
-  memset(mSendBuff, '0', sizeof(mSendBuff));
 
   mServAddr.sin_family = AF_INET;
   mServAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-  mServAddr.sin_port = htons(5000);
+  mServAddr.sin_port = htons(4050);
 
   int flags = fcntl(mListenSocket, F_GETFL);
   fcntl(mListenSocket, F_SETFL, flags | O_NONBLOCK);
@@ -24,7 +23,7 @@ Server::ConnectionHandler::ConnectionHandler()
   listen(mListenSocket, 10);
 }
 
-Server::ConnectionHandler::~ConnectionHandler()
+ConnectionHandler::~ConnectionHandler()
 {
   for (auto it = mConnection.begin(); it != mConnection.end(); it++)
   {
@@ -33,16 +32,18 @@ Server::ConnectionHandler::~ConnectionHandler()
   }
 }
 
-void Server::ConnectionHandler::RegisterOnReceiveCallback(std::function<void(int, char*, int)> aReceiveCallback)
+void ConnectionHandler::RegisterOnReceiveCallback(std::function<void(int, char*, int)> aReceiveCallback)
 {
   mReceiveCallback = aReceiveCallback;
 }
 
-void Server::ConnectionHandler::RunConnectionHandler()
+void ConnectionHandler::RunConnectionHandler()
 {
+
   int result = accept(mListenSocket, (struct sockaddr*)NULL, NULL);
   if (result != -1)
   {
+    printf("\n Found new Connection \n");
     Connection *newConnection = new Connection();
     newConnection->connectionId = mConnectionId++;
     newConnection->connectionSocket = result;
@@ -54,7 +55,7 @@ void Server::ConnectionHandler::RunConnectionHandler()
   }
 }
 
-void Server::ConnectionHandler::RunReceiveHandler()
+void ConnectionHandler::RunReceiveHandler()
 {
   int receiveSize = 0;
   char receiveBuffer[RECEIVE_BUFFER_SIZE];
@@ -74,68 +75,15 @@ void Server::ConnectionHandler::RunReceiveHandler()
   }
 }
 
-void Server::ConnectionHandler::Send(int connectionId)
+void ConnectionHandler::Send(int connectionId, char * aSendBuffer, int aDataSize)
 {
-  mTicks = time(NULL);
-  snprintf(mSendBuff, sizeof(mSendBuff), "%.24s\r\n", ctime(&mTicks));
-
   for (auto it = mConnection.begin(); it != mConnection.end(); it++)
   {
     if (it->connectionId == connectionId)
     {
-      write(it->connectionSocket, mSendBuff, strlen(mSendBuff));
+      write(it->connectionSocket, aSendBuffer, aDataSize);
     }
   }
   usleep(2);
 }
 
-
-Client::ConnectionHandler::ConnectionHandler(char * ip)
-{
-  if((mSocketfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
-  {
-      printf("\n Error : Could not create socket \n");
-//      return 1;
-      //Handle fault
-  }
-  memset(&mClientAddr, '0', sizeof(mClientAddr));
-  mClientAddr.sin_family = AF_INET;
-  mClientAddr.sin_port = htons(5000);
-
-  if(inet_pton(AF_INET, ip, &mClientAddr.sin_addr)<=0)
-  {
-      printf("\n inet_pton error occured\n");
-      //Todo: Handle fault
-  }
-
-  if( connect(mSocketfd, (struct sockaddr *)&mClientAddr, sizeof(mClientAddr)) < 0)
-  {
-     printf("\n Error : Connect Failed \n");
-     //Todo: Handle fault
-  }
-
-}
-
-Client::ConnectionHandler::~ConnectionHandler()
-{
-
-}
-
-int Client::ConnectionHandler::Receive(char* aReceiveBuffer, int aReceiveBufferSize)
-{
-  int returnValue = 0;
-  int receiveSize = read(mSocketfd, aReceiveBuffer, aReceiveBufferSize-1);
-  if (receiveSize > 0)
-  {
-    returnValue = receiveSize;
-  }
-  return returnValue;
-}
-
-
-void Client::ConnectionHandler::Send(char * aSendBuffer, int aDataSize)
-{
-  write(mSocketfd, aSendBuffer, aDataSize);
-  usleep(60);
-  printf("\n Send \n");
-}

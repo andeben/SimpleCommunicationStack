@@ -3,24 +3,25 @@
 #include <stdio.h>
 #include <string.h>
 #include "BlackChannel.hpp"
-#include "ConnectionHandler.hpp"
 
 
-MessageRouter::MessageRouter()
+MessageRouter::MessageRouter(ConnectionHandlerIf* connectionHandler) :
+  mConnection(connectionHandler)
 {
-  mConnection = new Server::ConnectionHandler();
   using namespace std::placeholders;
   mConnection->RegisterOnReceiveCallback(std::bind(&MessageRouter::OnReceive, this, _1, _2, _3));
 }
 
 MessageRouter::~MessageRouter()
 {
-  delete mConnection;
 }
 
 void MessageRouter::Run()
 {
+//  printf("\n Run ConnectionHandler \n");
+
   mConnection->RunConnectionHandler();
+//  printf("\n Run ReceiveHandler \n");
   mConnection->RunReceiveHandler();
 }
 

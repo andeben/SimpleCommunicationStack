@@ -5,32 +5,29 @@
 #include <sstream>
 
 #include "BlackChannel.hpp"
-#include "ConnectionHandler.hpp"
+#include "ConnectionHandlerLinuxClient.hpp"
 #include "CabinSupervisorProt.hpp"
 
 
 using namespace std;
 
-Client::ConnectionHandler* mConnectionHandler;
+ConnectionHandler* mConnectionHandler;
 bool isConnected = false;
 
-void receive(){
-  char recvBuff[1024];
-  memset(recvBuff, '0',sizeof(recvBuff));
-  int n = 0;
-  while ( (n = mConnectionHandler->Receive(recvBuff, sizeof(recvBuff)-1)) > 0)
+
+
+void OnReceive(int aConnectionId, char* aReceiveBuffer, int aReceiveBufferSize)
+{
+  printf("\n *******************************OnReceive \n");
+  printf("\n received message with ConnectionId id: %d \n", aConnectionId);
+  for (int i = 0; i < aReceiveBufferSize; i++)
   {
-    recvBuff[n] = 0;
-    if(fputs(recvBuff, stdout) == EOF)
-    {
-      printf("\n Error : Fputs error\n");
-    }
+    printf("%02x", aReceiveBuffer[i]);
   }
-  if(n < 0)
-  {
-    printf("\n Read error \n");
-  }
+  printf("\n");
 }
+
+
 
 void send(uint8_t sigNo)
 {
@@ -45,7 +42,7 @@ void send(uint8_t sigNo)
   BlackChannelMessage_t message;
   message.signo = 0x01;
   memcpy(&message.payload, &payload, sizeof(BlackChannelMessagePayload_t));
-  mConnectionHandler->Send((char*)&message, sizeof(message));
+  mConnectionHandler->Send(0, (char*)&message, sizeof(message));
 
 }
 
@@ -59,7 +56,7 @@ bool connect(char * ip)
   }
   else
   {
-    mConnectionHandler = new Client::ConnectionHandler(ip);
+    mConnectionHandler = new ConnectionHandler(ip);
     isConnected = true;
     return true;
   }

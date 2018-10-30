@@ -6,7 +6,7 @@
 #include <map>
 
 #include "BlackChannel.hpp"
-#include "ConnectionHandler.hpp"
+#include "ConnectionHandlerIf.hpp"
 #include "CabinSupervisorProt.hpp"
 
 const std::string SERVER_IP = "0.0.0.0";
@@ -14,13 +14,13 @@ const int SERVER_PORT = 5000;
 
 class MessageRouter {
 public:
-  MessageRouter();
+  MessageRouter(ConnectionHandlerIf* connectionHandler);
   ~MessageRouter();
   void Run();
   void AddSignalSubscriber(uint8_t aProtocolId, std::function<void(BlackChannelMessagePayload_t*)>  aCallback);
 private:
   void OnReceive(int aConnectionId, char* aReceiveBuffer, int aReceiveBufferSize);
-  Server::ConnectionHandler* mConnection;
+  ConnectionHandlerIf* mConnection;
   std::map<uint8_t,std::function<void(BlackChannelMessagePayload_t*)> > mSubscribers;
 
 };

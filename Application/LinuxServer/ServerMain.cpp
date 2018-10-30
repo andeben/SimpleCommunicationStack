@@ -5,11 +5,13 @@
 
 #include "BlackChannel.hpp"
 #include "CspHandler.hpp"
-
+#include "ConnectionHandlerIf.hpp"
+#include "ConnectionHandlerLinuxServer.hpp"
 
 int main(int argc, char *argv[])
 {
-  MessageRouter* mMessageRouter = new MessageRouter();
+  ConnectionHandler* mConnectionHandler = new ConnectionHandler();
+  MessageRouter* mMessageRouter = new MessageRouter(mConnectionHandler);
   CspHandler*    mCspHandler    = new CspHandler();
   using namespace std::placeholders;
   mMessageRouter->AddSignalSubscriber(BLACK_CHANNEL_PROTOCOL_ID_CSP, std::bind(&CspHandler::HandleReceivedMessage, mCspHandler, _1));
@@ -20,5 +22,6 @@ int main(int argc, char *argv[])
     usleep(1);
   }
   delete mMessageRouter;
+  delete mConnectionHandler;
 }
 
