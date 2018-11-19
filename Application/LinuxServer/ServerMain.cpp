@@ -7,12 +7,14 @@
 #include "CspHandler.hpp"
 #include "ConnectionHandlerIf.hpp"
 #include "ConnectionHandlerLinuxServer.hpp"
+#include "Notifications.hpp"
 
 int main(int argc, char *argv[])
 {
   ConnectionHandler* mConnectionHandler = new ConnectionHandler();
   MessageRouter* mMessageRouter = new MessageRouter(mConnectionHandler);
   CspHandler*    mCspHandler    = new CspHandler();
+  Notifications* mNotificationsHandler    = new Notifications();
   using namespace std::placeholders;
   mMessageRouter->AddSignalSubscriber(BLACK_CHANNEL_PROTOCOL_ID_CSP, std::bind(&CspHandler::HandleReceivedMessage, mCspHandler, _1));
 
