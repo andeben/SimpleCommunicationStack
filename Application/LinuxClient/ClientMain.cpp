@@ -4,14 +4,14 @@
 #include <iostream>
 #include <sstream>
 
+#include "ConnectionLinuxClient.hpp"
 #include "BlackChannel.hpp"
-#include "ConnectionHandlerLinuxClient.hpp"
 #include "CabinSupervisorProt.hpp"
 
 
 using namespace std;
 
-ConnectionHandler* mConnectionHandler;
+Connection* mConnectionHandler;
 bool isConnected = false;
 
 
@@ -56,7 +56,7 @@ bool connect(char * ip)
   }
   else
   {
-    mConnectionHandler = new ConnectionHandler(ip);
+    mConnectionHandler = new Connection(ip);
     isConnected = true;
     return true;
   }

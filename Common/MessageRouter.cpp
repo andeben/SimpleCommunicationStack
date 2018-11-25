@@ -5,7 +5,7 @@
 #include "BlackChannel.hpp"
 
 
-MessageRouter::MessageRouter(ConnectionHandlerIf* connectionHandler) :
+MessageRouter::MessageRouter(ConnectionIf* connectionHandler) :
   mConnection(connectionHandler)
 {
   using namespace std::placeholders;
@@ -18,10 +18,7 @@ MessageRouter::~MessageRouter()
 
 void MessageRouter::Run()
 {
-//  printf("\n Run ConnectionHandler \n");
-
   mConnection->RunConnectionHandler();
-//  printf("\n Run ReceiveHandler \n");
   mConnection->RunReceiveHandler();
 }
 

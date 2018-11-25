@@ -1,6 +1,6 @@
 #include "Notifications.hpp"
-#include <functional>
 
+#include <functional>
 
 Notifications::Notifications()
 {
@@ -19,7 +19,7 @@ void Notifications::Notify(uint8_t aNotificationId)
   }
 }
 
-void Notifications::Subscribe(uint8_t aNotificationId, NotificationsIf* aSubscriber)
+void Notifications::Subscribe(uint8_t aNotificationId, NotificationSubscriberIf* aSubscriber)
 {
   mSubscribers.emplace(aNotificationId, aSubscriber);
 }

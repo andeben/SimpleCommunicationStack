@@ -9,4 +9,4 @@ private:
 
 };
 
-#endif //CLIMATE_MANAGER_HPP
+#endif //STORAGE_MANAGER_HPP

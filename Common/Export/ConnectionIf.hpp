@@ -3,15 +3,22 @@
 #include <functional>
 
 
+
 typedef struct ConnectionStruct
 {
   int connectionSocket;
   int connectionId;
-} Connection_t;
+} ConnectionStruct_t;
+
+enum Result {
+  CONNECTED,
+  DISCONNECTED
+};
 
 class ConnectionIf {
 public:
   virtual ~ConnectionIf() {};
+  virtual Result Connect() = 0;
   virtual void RegisterOnReceiveCallback(std::function<void(int, char*, int)> aReceiveCallback) = 0;
   virtual void RunConnectionHandler() = 0;
   virtual void RunReceiveHandler() = 0;

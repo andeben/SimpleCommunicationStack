@@ -6,15 +6,14 @@
 
 #include "NotificationsIf.hpp"
 
-
-class Notifications {
+class Notifications : public NotificationsIf {
 public:
   Notifications();
   ~Notifications();
-  void Subscribe(uint8_t aNotificationId, NotificationsIf* aSubscriber);
+  void Subscribe(uint8_t aNotificationId, NotificationSubscriberIf* aSubscriber);
   void Notify(uint8_t aNotificationId);
 private:
-  std::map<uint8_t, NotificationsIf*> mSubscribers;
+  std::map<uint8_t, NotificationSubscriberIf*> mSubscribers;
 
 };
 

@@ -11,21 +11,16 @@
 
 const int RECEIVE_BUFFER_SIZE = 512;
 
-//typedef struct Connection
-//{
-//  int connectionSocket;
-//  int connectionId;
-//} Connection_t;
-
 class Connection : public ConnectionIf {
 public:
   Connection();
   ~Connection();
-
+  Result Connect();
   void RegisterOnReceiveCallback(std::function<void(int, char*, int)> aReceiveCallback);
   void RunConnectionHandler();
   void RunReceiveHandler();
   void Send(int connectionId, char * aSendBuffer, int aDataSize);
+
 private:
   int mListenSocket = 0;
   std::list<ConnectionStruct> mConnection;

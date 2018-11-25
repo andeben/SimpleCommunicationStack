@@ -38,6 +38,11 @@ Connection::~Connection()
 {
 }
 
+Result Connection::Connect()
+{
+  return Result::CONNECTED;
+}
+
 void Connection::RegisterOnReceiveCallback(std::function<void(int, char*, int)> aReceiveCallback)
 {
   mReceiveCallback = aReceiveCallback;

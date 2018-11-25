@@ -3,15 +3,15 @@
 #include <unistd.h>
 #include <functional>
 
+#include "ConnectionIf.hpp"
+#include "ConnectionLinuxServer.hpp"
 #include "BlackChannel.hpp"
 #include "CspHandler.hpp"
-#include "ConnectionHandlerIf.hpp"
-#include "ConnectionHandlerLinuxServer.hpp"
 #include "Notifications.hpp"
 
 int main(int argc, char *argv[])
 {
-  ConnectionHandler* mConnectionHandler = new ConnectionHandler();
+  Connection* mConnectionHandler = new Connection();
   MessageRouter* mMessageRouter = new MessageRouter(mConnectionHandler);
   CspHandler*    mCspHandler    = new CspHandler();
   Notifications* mNotificationsHandler    = new Notifications();

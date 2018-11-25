@@ -16,6 +16,7 @@ public:
   Connection(char * ip);
   ~Connection();
 
+  Result Connect();
   void RegisterOnReceiveCallback(std::function<void(int, char*, int)> aReceiveCallback);
   void RunConnectionHandler();
   void RunReceiveHandler();

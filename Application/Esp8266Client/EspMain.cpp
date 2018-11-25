@@ -1,11 +1,12 @@
 #include <Arduino.h>
 #include <functional>
-#include "ConnectionHandlerEsp8266.hpp"
+
+#include "ConnectionEsp8266.hpp"
 #include "Temperature.hpp"
 // prototypes
 
 
-ConnectionHandler* mConnectionHandler;
+Connection* mConnectionHandler;
 Temperature* temp;
 void setup()
 {
@@ -13,7 +14,7 @@ void setup()
   Serial.println("Start");
 
     Serial.print("Creating ConnectionHandler");
-    mConnectionHandler = new ConnectionHandler("192.168.10.207");
+    mConnectionHandler = new Connection("192.168.10.207");
     temp = new Temperature();
 }
 

@@ -6,7 +6,6 @@ aux_source_directory(${CMAKE_SOURCE_DIR}/Application/LinuxClient ApplicationLinu
 aux_source_directory(${CMAKE_SOURCE_DIR}/Application/LinuxServer ApplicationLinuxServer)
 aux_source_directory(${CMAKE_SOURCE_DIR}/Application/LinuxEsp826Client ApplicationEsp8266Client)
 
-
 aux_source_directory(${CMAKE_SOURCE_DIR}/Platform/LinuxClient PlatformLinuxClient)
 aux_source_directory(${CMAKE_SOURCE_DIR}/Platform/LinuxServer PlatformLinuxServer)
 aux_source_directory(${CMAKE_SOURCE_DIR}/Platform/Esp8266Client PlatformEsp8266Client)

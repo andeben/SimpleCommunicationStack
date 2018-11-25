@@ -7,6 +7,7 @@
 #include <fcntl.h>
 #include <arpa/inet.h>
 
+#include "ConnectionIf.hpp"
 
 Connection::Connection()
 {
@@ -30,6 +31,11 @@ Connection::~Connection()
     close(it->connectionSocket);
     mConnection.erase(it);
   }
+}
+
+Result Connection::Connect()
+{
+  return Result::CONNECTED;
 }
 
 void Connection::RegisterOnReceiveCallback(std::function<void(int, char*, int)> aReceiveCallback)
