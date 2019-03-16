@@ -13,9 +13,9 @@ class Connection : public ConnectionIf {
 public:
   Connection(char * ip);
   ~Connection();
-  Result Connect();
+  ConnectResult SetupConnection();
   void RegisterOnReceiveCallback(std::function<void(int, char*, int)> aReceiveCallback);
-  void RunConnectionHandler();
+  std::tuple<ConnectionHandlerResult, ConnectionStruct*> RunConnectionHandler();
   void RunReceiveHandler();
   void Send(int connectionId, char * aSendBuffer, int aDataSize);
 private:

@@ -28,14 +28,14 @@ Connection::~Connection()
 {
   for (auto it = mConnection.begin(); it != mConnection.end(); it++)
   {
-    close(it->connectionSocket);
+    close((*it)->connectionSocket);
     mConnection.erase(it);
   }
 }
 
-Result Connection::Connect()
+ConnectResult Connection::SetupConnection()
 {
-  return Result::CONNECTED;
+  return ConnectResult::CONNECTED;
 }
 
 void Connection::RegisterOnReceiveCallback(std::function<void(int, char*, int)> aReceiveCallback)
@@ -43,31 +43,35 @@ void Connection::RegisterOnReceiveCallback(std::function<void(int, char*, int)> 
   mReceiveCallback = aReceiveCallback;
 }
 
-void Connection::RunConnectionHandler()
+std::tuple<ConnectionHandlerResult, ConnectionStruct*> Connection::RunConnectionHandler()
 {
+  std::tuple<ConnectionHandlerResult, ConnectionStruct*> returnValue =
+      std::make_tuple(ConnectionHandlerResult::NO_NEW_CONNECTION, nullptr);
 
   int result = accept(mListenSocket, (struct sockaddr*)NULL, NULL);
   if (result != -1)
   {
     printf("\n Found new Connection \n");
-    ConnectionStruct *newConnection = new ConnectionStruct();
+    ConnectionStruct* newConnection = new ConnectionStruct();
     newConnection->connectionId = mConnectionId++;
     newConnection->connectionSocket = result;
     int flags = fcntl(result, F_GETFL);
     fcntl(result, F_SETFL, flags | O_NONBLOCK);
-    mConnection.push_back(*newConnection);
-
+    mConnection.push_back(newConnection);
+    returnValue = std::make_tuple(ConnectionHandlerResult::NEW_CONNECTION_ESTABLISH, newConnection);
     printf("\n Found new Connection : Assign ConnectionId: %d \n", mConnectionId - 1 );
-  }
-}
 
+  }
+
+  return returnValue;
+}
 void Connection::RunReceiveHandler()
 {
   int receiveSize = 0;
   char receiveBuffer[RECEIVE_BUFFER_SIZE];
   for (auto it = mConnection.begin(); it != mConnection.end(); it++)
   {
-    receiveSize = read(it->connectionSocket, receiveBuffer, RECEIVE_BUFFER_SIZE-1);
+    receiveSize = read((*it)->connectionSocket, receiveBuffer, RECEIVE_BUFFER_SIZE-1);
     if (receiveSize > 0)
     {
       printf("\n Receive something \n");
@@ -75,7 +79,7 @@ void Connection::RunReceiveHandler()
       //Callback on receive
       if (mReceiveCallback != NULL)
       {
-        mReceiveCallback(it->connectionId, receiveBuffer, receiveSize);
+        mReceiveCallback((*it)->connectionId, receiveBuffer, receiveSize);
       }
     }
   }
@@ -85,9 +89,9 @@ void Connection::Send(int connectionId, char * aSendBuffer, int aDataSize)
 {
   for (auto it = mConnection.begin(); it != mConnection.end(); it++)
   {
-    if (it->connectionId == connectionId)
+    if ((*it)->connectionId == connectionId)
     {
-      write(it->connectionSocket, aSendBuffer, aDataSize);
+      write((*it)->connectionSocket, aSendBuffer, aDataSize);
     }
   }
   usleep(2);

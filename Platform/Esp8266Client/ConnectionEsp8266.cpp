@@ -20,9 +20,9 @@ Connection::~Connection()
 {
 }
 
-Result Connection::Connect()
+ConnectResult Connection::SetupConnection()
 {
- return Result::CONNECTED;
+ return ConnectResult::CONNECTED;
 }
 
 void Connection::RegisterOnReceiveCallback(std::function<void(int, char*, int)> aReceiveCallback)
@@ -30,8 +30,9 @@ void Connection::RegisterOnReceiveCallback(std::function<void(int, char*, int)> 
   mReceiveCallback = aReceiveCallback;
 }
 
-void Connection::RunConnectionHandler()
+std::tuple<ConnectionHandlerResult, ConnectionStruct*> Connection::RunConnectionHandler()
 {
+  return std::make_tuple(ConnectionHandlerResult::NO_NEW_CONNECTION, nullptr);
 }
 
 void Connection::RunReceiveHandler()

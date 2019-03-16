@@ -4,9 +4,9 @@
 #include <map>
 #include <functional>
 
-#include "NotificationsIf.hpp"
+#include "NotificationSubscriberIf.hpp"
 
-class Notifications : public NotificationsIf {
+class Notifications {
 public:
   Notifications();
   ~Notifications();

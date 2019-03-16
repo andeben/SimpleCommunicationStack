@@ -16,6 +16,7 @@ void Notifications::Notify(uint8_t aNotificationId)
   while (it != mSubscribers.end())
   {
     it->second->NotificationReceived(aNotificationId);
+    it++;
   }
 }
 

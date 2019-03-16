@@ -6,6 +6,7 @@
 #include <time.h>
 #include <netinet/in.h>
 #include <functional>
+#include <tuple>
 
 #include "ConnectionIf.hpp"
 
@@ -15,15 +16,15 @@ class Connection : public ConnectionIf {
 public:
   Connection();
   ~Connection();
-  Result Connect();
+  ConnectResult SetupConnection();
   void RegisterOnReceiveCallback(std::function<void(int, char*, int)> aReceiveCallback);
-  void RunConnectionHandler();
+  std::tuple<ConnectionHandlerResult, ConnectionStruct*> RunConnectionHandler();
   void RunReceiveHandler();
   void Send(int connectionId, char * aSendBuffer, int aDataSize);
 
 private:
   int mListenSocket = 0;
-  std::list<ConnectionStruct> mConnection;
+  std::list<ConnectionStruct*> mConnection;
   int mConnectionId = 0;
   struct sockaddr_in mServAddr;
   std::function<void(int, char*, int)> mReceiveCallback;

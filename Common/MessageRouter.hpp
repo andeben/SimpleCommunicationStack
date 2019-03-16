@@ -9,19 +9,16 @@
 #include "BlackChannel.hpp"
 #include "CabinSupervisorProt.hpp"
 
-const std::string SERVER_IP = "0.0.0.0";
-const int SERVER_PORT = 5000;
-
 class MessageRouter {
 public:
   MessageRouter(ConnectionIf* connectionHandler);
   ~MessageRouter();
   void Run();
-  void AddSignalSubscriber(uint8_t aProtocolId, std::function<void(BlackChannelMessagePayload_t*)>  aCallback);
+  void AddSignalSubscriber(uint8_t aProtocolId, std::function<void(BlackChannelMessagePayload_t*, int)>  aCallback);
 private:
   void OnReceive(int aConnectionId, char* aReceiveBuffer, int aReceiveBufferSize);
   ConnectionIf* mConnection;
-  std::map<uint8_t,std::function<void(BlackChannelMessagePayload_t*)> > mSubscribers;
+  std::map<uint8_t,std::function<void(BlackChannelMessagePayload_t*, int)> > mSubscribers;
 
 };
 

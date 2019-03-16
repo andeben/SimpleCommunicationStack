@@ -39,10 +39,11 @@ typedef struct {
 ///////////////////////////////////////////////////////////////////////////////
 typedef struct {
   uint8_t   supportedFunctions;
+  char      clientIdentifier[25];
 } CspEstablishConnectionReq;
 
 typedef struct {
-  uint8_t   connectionId;
+  uint8_t   clientId;
 } CspEstablishConnectionCfm;
 
 typedef struct {

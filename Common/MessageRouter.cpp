@@ -18,11 +18,10 @@ MessageRouter::~MessageRouter()
 
 void MessageRouter::Run()
 {
-  mConnection->RunConnectionHandler();
   mConnection->RunReceiveHandler();
 }
 
-void MessageRouter::AddSignalSubscriber(uint8_t aProtocolId, std::function<void(BlackChannelMessagePayload_t*)> aCallback)
+void MessageRouter::AddSignalSubscriber(uint8_t aProtocolId, std::function<void(BlackChannelMessagePayload_t*, int)> aCallback)
 {
   mSubscribers.insert({aProtocolId, aCallback});
 }
@@ -34,6 +33,6 @@ void MessageRouter::OnReceive(int aConnectionId, char* aReceiveBuffer, int aRece
   auto it = mSubscribers.find(((BlackChannelMessagePayload_t*)((BlackChannelMessage_t*)aReceiveBuffer)->payload)->protocolId);
   if (it != mSubscribers.end())
   {
-    it->second(((BlackChannelMessagePayload_t*)((BlackChannelMessage_t*)aReceiveBuffer)->payload));
+    it->second(((BlackChannelMessagePayload_t*)((BlackChannelMessage_t*)aReceiveBuffer)->payload), aConnectionId);
   }
 }
